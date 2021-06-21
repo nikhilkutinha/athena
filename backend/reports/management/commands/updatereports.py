@@ -38,7 +38,7 @@ class Command(BaseCommand):
                     'recovered': recovered[country][date],
                 }
 
-                self.add_to_database(
+                self.add_report_to_database(
                     region=country,
                     date=date,
                     confirmed=report['confirmed'],
@@ -124,7 +124,7 @@ class Command(BaseCommand):
 
         return timeline
 
-    def add_to_database(self, **kwargs):
+    def add_report_to_database(self, **kwargs):
         """
         Update or create a report for a specific region/country.
 
