@@ -1,7 +1,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Athena][product-screenshot]]
+![Athena][product-screenshot]
 
 An application to visualise statistics about the coronavirus pandemic. 
 
