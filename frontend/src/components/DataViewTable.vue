@@ -18,7 +18,8 @@
     >
       <figure class="flag">
         <img
-          :src="props.row.flag || require('@/assets/img/default_flag.svg')"
+          :src="props.row.flag"
+          @error="$event.target.src=require('@/assets/img/default_flag.svg')"
         />
       </figure>
     </b-table-column>

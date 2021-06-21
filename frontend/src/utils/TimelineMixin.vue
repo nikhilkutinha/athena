@@ -9,17 +9,20 @@ export default {
   },
 
   methods: {
-    genKeys () {
+    prepareFigures () {
       const graphTypes = { cumulative: [], discrete: [] }
-      const figures = { confirmed: {}, deaths: {}, recovered: {}, active: {} }
+      const figures = {
+        confirmed: {},
+        deaths: {},
+        recovered: {},
+        active: {}
+      }
 
       /**
        * The following are keys that represent data
        * we will be plotting on an area chart. To
        * obtain column chart keys exclude "active".
-       *
        */
-
       Object.keys(figures).forEach((key) => {
         figures[key] = _.cloneDeep(graphTypes)
       })
@@ -38,26 +41,26 @@ export default {
     timeline () {
       if (!this.reports.length) return
 
-      const figures = this.genKeys()
+      const figures = this.prepareFigures()
 
       this.reports.forEach((report, i) => {
         const date = Date.parse(report.date)
 
         report.active = this.findActive(report)
 
-        Object.entries(report).forEach(([key, val]) => {
-          report[key] = this.fixNegativeNumber(val)
+        Object.entries(report).forEach(([name, figure]) => {
+          report[name] = this.fixNegativeNumber(figure)
         })
 
-        Object.keys(figures).forEach((key) => {
-          figures[key].cumulative.push([date, report[key]])
+        Object.keys(figures).forEach((name) => {
+          figures[name].cumulative.push([date, report[name]])
 
-          if (key !== 'active') {
+          if (name !== 'active') {
             if (i > 0) {
-              const prev = this.reports[i - 1][key]
-              let diff = report[key] - prev
+              const prev = this.reports[i - 1][name]
+              let diff = report[name] - prev
               diff = this.fixNegativeNumber(diff)
-              figures[key].discrete.push([date, diff])
+              figures[name].discrete.push([date, diff])
             }
           }
         })

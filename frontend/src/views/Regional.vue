@@ -40,7 +40,7 @@ import DataViewPanel from '@/components/DataViewPanel'
 import TheHeader from '@/components/TheHeader'
 
 import AsyncMixin from '@/utils/AsyncMixin'
-import TimelineGenMixin from '@/utils/TimelineGenMixin'
+import TimelineMixin from '@/utils/TimelineMixin'
 
 import axios from 'axios'
 import { API_BASE_URL } from '@/config.js'
@@ -50,7 +50,7 @@ export default {
     id: [String, Number]
   },
 
-  mixins: [AsyncMixin, TimelineGenMixin],
+  mixins: [AsyncMixin, TimelineMixin],
 
   components: {
     TheHeader,

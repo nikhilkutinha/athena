@@ -34,7 +34,7 @@ import DataViewCard from '@/components/DataViewCard'
 import DataViewTable from '@/components/DataViewTable'
 import TheHeader from '@/components/TheHeader'
 import AsyncMixin from '@/utils/AsyncMixin'
-import TimelineGenMixin from '@/utils/TimelineGenMixin'
+import TimelineMixin from '@/utils/TimelineMixin'
 
 import axios from 'axios'
 import { API_BASE_URL } from '@/config.js'
@@ -46,18 +46,18 @@ export default {
     DataViewTable
   },
 
-  mixins: [AsyncMixin, TimelineGenMixin],
+  mixins: [AsyncMixin, TimelineMixin],
 
   data () {
     return {
       title: '',
       reports: [],
-      countryLatest: []
+      latest: []
     }
   },
 
   watch: {
-    $route: 'fetchData'
+    $route: 'loadAsyncData'
   },
 
   mounted () {
@@ -66,22 +66,25 @@ export default {
 
   computed: {
     tabulated () {
-      if (!this.countryLatest.length) return
+      if (!this.latest.length) return
 
-      const latest = this.countryLatest.map((cty) => {
-        const latestReport = { ...cty.latest }
-        const { confirmed, recovered, deaths } = latestReport
+      return this.latest.map((country) => {
+        const report = { ...country.latest }
+        const { confirmed, recovered, deaths } = report
 
-        latestReport.active = confirmed - (recovered + deaths)
+        report.active = confirmed - (recovered + deaths)
 
-        Object.entries(latestReport).forEach(([key, val]) => {
-          latestReport[key] = this.fixNegativeNumber(val)
+        Object.entries(report).forEach(([name, figure]) => {
+          report[name] = this.fixNegativeNumber(figure)
         })
 
-        return { ...latestReport, id: cty.id, name: cty.name, flag: cty.flag }
+        return {
+          ...report,
+          id: country.id,
+          name: country.name,
+          flag: country.flag_url
+        }
       })
-
-      return latest
     }
   },
 
@@ -94,16 +97,12 @@ export default {
         axios.get(`${API_BASE_URL}/all`)
       ]
 
-      /**
-       * Finally we fetch from the above
-       * endpoints together.
-       */
       axios
         .all(urls)
         .then(
           axios.spread((first, second) => {
             this.reports = first.data
-            this.countryLatest = second.data
+            this.latest = second.data
             this.title = 'World'
           })
         )

@@ -1,5 +1,5 @@
 <template>
-  <div class="card" :class="color">
+  <div class="card" :class="colorClass">
     <div class="card-content">
       <header class="is-uppercase is-size-7">
         {{ name }}
@@ -32,44 +32,7 @@ export default {
     return {}
   },
 
-  // data() {
-  //   return {
-  //     chartOptions: {
-  //       tooltip: {
-  //         enabled: false,
-  //       },
-  //       stroke: {
-  //         curve: "smooth",
-  //       },
-  //       chart: {
-  //         id: "sparkline",
-  //         sparkline: {
-  //           enabled: true,
-  //         },
-  //       },
-  //       fill: {
-  //         type: "solid",
-  //         colors: ["#fff"],
-  //         opacity: 0.3,
-  //       },
-  //       colors: ["#fff"],
-  //     },
-
-  //     series: [
-  //       {
-  //         name: "timeline",
-  //         data: this.timeline,
-  //       },
-  //     ],
-  //   };
-  // },
-
   filters: {
-    /**
-     * Adds commas to large numbers
-     * to make them more readable.
-     */
-
     humanizeNumber (value) {
       if (!value) return 'NA'
 
@@ -78,35 +41,18 @@ export default {
   },
 
   computed: {
-    /**
-     * Get last report from the timeline
-     * array.
-     */
-
     latest () {
       if (!this.timeline) return
       return this.timeline.slice(-1)[0][1]
     },
 
-    /**
-     * Determine card color based on
-     * name passed in.
-     */
-
-    color () {
-      const base = 'has-background'
-      switch (this.name) {
-        case 'recovered':
-          return `${base}-success`
-        case 'deaths':
-          return `${base}-danger`
-        case 'confirmed':
-          return `${base}-info`
-        case 'active':
-          return `${base}-warning`
-        default:
-          return ''
-      }
+    colorClass () {
+      return 'has-background-' + {
+        recovered: 'success',
+        deaths: 'danger',
+        confirmed: 'info',
+        active: 'warning'
+      }[this.name]
     }
   }
 }

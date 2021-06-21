@@ -13,7 +13,7 @@
       <b-navbar-item tag="router-link" :to="{ path: '/' }">
         Home
       </b-navbar-item>
-      <b-navbar-item tag="a" href="#">
+      <b-navbar-item tag="a" target="_blank" :href="about_href">
         About
       </b-navbar-item>
     </template>
@@ -26,10 +26,16 @@
 
 <script>
 import Searchbox from '@/components/Searchbox'
+import { homepage } from '@/../package.json'
 
 export default {
   components: {
     Searchbox
+  },
+  data() {
+    return {
+      about_href: homepage
+    }
   }
 }
 </script>

@@ -47,24 +47,12 @@ export default {
   },
 
   computed: {
-    /**
-     * Normalizes daily data to be
-     * passed into highcharts.
-     *
-     */
-
     daily () {
       const data = this.timeline.discrete
       const label = 'daily ' + (this.name === 'confirmed' ? 'cases' : this.name)
 
       return { data, name: label }
     },
-
-    /**
-     * Normalizes total data to be
-     * passed into highcharts.
-     *
-     */
 
     total () {
       const data = this.timeline.cumulative

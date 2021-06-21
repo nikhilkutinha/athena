@@ -1,36 +1,39 @@
 from rest_framework import serializers
 from django.db.models import Prefetch
-from .. models import Region, Report
+from reports.models import Region, Report
 
 
 class CountrySerializer(serializers.ModelSerializer):
+    """
+    Serializes an individual country.
+    """
+    
     class Meta:
         model = Region
         fields = (
-            'id', 
-            'name', 
-            'iso', 
-            'flag',
-            'latitude', 
-            'longitude', 
-            'population'
+            'id',
+            'name',
+            'iso',
+            'latitude',
+            'longitude',
+            'population',
+            'flag_url',
         )
 
 
 class ReportSerializer(serializers.ModelSerializer):
+    """
+    Serializes an individual report.
+    """
+    
     class Meta:
         model = Report
-        fields = (
-            'date', 
-            'confirmed', 
-            'deaths', 
-            'recovered'
-        )
+        fields = ('date', 'confirmed', 'deaths', 'recovered')
 
 
 class CountryTimelineSerializer(serializers.ModelSerializer):
     """
-    Serializes a country with all its reports in 
+    Serializes a country with all its reports in
     chronological order.
     """
 
@@ -39,58 +42,50 @@ class CountryTimelineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Region
         fields = (
-            'id', 
-            'name', 
-            'iso', 
-            'flag',
-            'latitude', 
-            'longitude', 
+            'id',
+            'name',
+            'iso',
+            'flag_url',
+            'latitude',
+            'longitude',
             'population',
-            'reports')
+            'reports',
+        )
 
     @staticmethod
     def setup_eager_loading(queryset):
-        """ 
-        Perform necessary eager loading of data. 
+        """
+        Perform necessary eager loading of data.
         """
         queryset = queryset.prefetch_related(
-            Prefetch(
-                'reports', queryset=Report.objects.order_by('date'))
+            Prefetch('reports', queryset=Report.objects.order_by('date'))
         )
         return queryset
 
 
 class CountryLatestSerializer(serializers.ModelSerializer):
     """
-    Serializes a country with its latest/recent report.
+    Serializes a country with its most recent report.
     """
 
     latest = serializers.SerializerMethodField()
 
     class Meta:
         model = Region
-        fields = (
-            'id', 
-            'name', 
-            'iso', 
-            'flag',
-            'latitude', 
-            'longitude', 
-            'latest'
-        )
+        fields = ('id', 'name', 'iso', 'flag_url', 'latitude', 'longitude', 'latest')
 
     def get_latest(self, instance):
         report = Report.objects.filter(region=instance).latest('date')
         return {
             'confirmed': report.confirmed,
             'deaths': report.deaths,
-            'recovered': report.recovered
+            'recovered': report.recovered,
         }
 
 
 class GlobalTimelineSerializer(serializers.Serializer):
     """
-    Serializers timeline of the entire world
+    Serializers the timeline of the entire world.
     """
 
     date = serializers.DateField()
