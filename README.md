@@ -1,9 +1,9 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Athena][product-screenshot]](https://example.com)
+[![Athena][product-screenshot]]
 
-This is an application I made to visualise statistics about the coronavirus pandemic. 
+An application to visualise statistics about the coronavirus pandemic. 
 
 Features:
 * View latest reports of each country in a sortable table format
