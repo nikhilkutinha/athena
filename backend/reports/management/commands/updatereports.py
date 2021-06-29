@@ -126,7 +126,7 @@ class Command(BaseCommand):
 
     def add_report_to_database(self, **kwargs):
         """
-        Update or create a report for a specific region/country.
+        Update or create a report for a specific region or country.
 
         Args:
             confirmed: (required) Number of confirmed cases.
